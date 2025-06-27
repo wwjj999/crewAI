@@ -9,6 +9,7 @@ from crewai.llm import LLM
 from crewai.llms.base_llm import BaseLLM
 from crewai.process import Process
 from crewai.task import Task
+from crewai.tasks.llm_guardrail import LLMGuardrail
 from crewai.tasks.task_output import TaskOutput
 
 warnings.filterwarnings(
@@ -17,7 +18,7 @@ warnings.filterwarnings(
     category=UserWarning,
     module="pydantic.main",
 )
-__version__ = "0.119.0"
+__version__ = "0.134.0"
 __all__ = [
     "Agent",
     "Crew",
@@ -29,4 +30,6 @@ __all__ = [
     "Flow",
     "Knowledge",
     "TaskOutput",
+    "LLMGuardrail",
+    "__version__",
 ]
