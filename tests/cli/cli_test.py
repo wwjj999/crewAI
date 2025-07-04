@@ -13,7 +13,7 @@ from crewai.cli.cli import (
     deply_status,
     flow_add_crew,
     reset_memories,
-    signup,
+    login,
     test,
     train,
     version,
@@ -162,8 +162,18 @@ def test_reset_knowledge(mock_get_crews, runner):
     assert call_count == 1, "reset_memories should have been called once"
 
 
-def test_reset_memory_from_many_crews(mock_get_crews, runner):
+def test_reset_agent_knowledge(mock_get_crews, runner):
+    result = runner.invoke(reset_memories, ["--agent-knowledge"])
+    call_count = 0
+    for crew in mock_get_crews.return_value:
+        crew.reset_memories.assert_called_once_with(command_type="agent_knowledge")
+        assert f"[Crew ({crew.name})] Agents knowledge has been reset." in result.output
+        call_count += 1
 
+    assert call_count == 1, "reset_memories should have been called once"
+
+
+def test_reset_memory_from_many_crews(mock_get_crews, runner):
     crews = []
     for crew_id in ["id-1234", "id-5678"]:
         mock_crew = mock.Mock(spec=Crew)
@@ -251,12 +261,12 @@ def test_test_invalid_string_iterations(evaluate_crew, runner):
 
 
 @mock.patch("crewai.cli.cli.AuthenticationCommand")
-def test_signup(command, runner):
+def test_login(command, runner):
     mock_auth = command.return_value
-    result = runner.invoke(signup)
+    result = runner.invoke(login)
 
     assert result.exit_code == 0
-    mock_auth.signup.assert_called_once()
+    mock_auth.login.assert_called_once()
 
 
 @mock.patch("crewai.cli.cli.DeployCommand")
